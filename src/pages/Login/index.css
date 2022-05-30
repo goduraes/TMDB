@@ -1,0 +1,12 @@
+#Login {
+  width: 100%;
+  height: 100vh;
+  background: linear-gradient(90deg, #0d253f,#01b4e4, #90cea1);
+}
+#Login > div {
+  min-width: 300px;
+  max-width: 300px;
+}
+#Login > div > div {
+  background: rgba(255, 255,255, 1);
+}
