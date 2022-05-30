@@ -1,11 +1,20 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../contexts/auth';
 import './index.css';
 
 const Login = () => {
-  const { loadingLogin, errorMessage, login } = useContext(AuthContext);
+  const { authenticated, loadingLogin, errorMessage, login } =
+    useContext(AuthContext);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (authenticated) {
+      navigate('/');
+    }
+  }, []);
 
   const handleSubmit = async () => {
     login(username, password);

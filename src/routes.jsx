@@ -11,10 +11,22 @@ import Login from './pages/Login';
 
 import { AuthProvider, AuthContext } from './contexts/auth';
 
+const loadingItem = (
+  <div className="loader-wrapper">
+    <span className="loader">
+      <span className="loader-inner" />
+    </span>
+  </div>
+);
+
 const Private = ({ children }) => {
-  const { authenticated } = useContext(AuthContext);
+  const { authenticated, loading } = useContext(AuthContext);
+  if (loading) {
+    return loadingItem;
+  }
+
   if (!authenticated) {
-    // return <Navigate to="/login" />;
+    return <Navigate to="/login" />;
   }
   return children;
 };

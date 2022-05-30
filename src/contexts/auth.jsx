@@ -1,4 +1,4 @@
-import React, { useState, createContext } from 'react';
+import React, { useState, useEffect, createContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import API from '../service/api';
 
@@ -8,6 +8,7 @@ export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [loadingLogin, setLoadingLogin] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
 
   // cria o token
@@ -34,13 +35,15 @@ export const AuthProvider = ({ children }) => {
       `/account?api_key=${process.env.REACT_APP_API_KEY}&session_id=${session}`,
     )
       .then(async (resp) => {
-        const userInfo = resp.data;
-        userInfo.session_id = session;
-        setUser(userInfo);
+        const loggedUser = resp.data;
+        loggedUser.session_id = session;
+        localStorage.setItem('user', JSON.stringify(loggedUser));
+        setUser(loggedUser);
         navigate('/');
       })
       .catch(() => {
         setErrorMessage('Oops! Something went wrong, try again.');
+        navigate('/login');
       });
   };
 
@@ -79,15 +82,31 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
+    localStorage.removeItem('user');
     setUser(null);
     navigate('/login');
   };
+
+  useEffect(() => {
+    const recoveredUser = localStorage.getItem('user');
+    if (recoveredUser) {
+      const userParse = JSON.parse(recoveredUser);
+      if (userParse.session_id) {
+        getUser(userParse.session_id);
+      } else {
+        navigate('/login');
+      }
+    }
+    setLoading(false);
+  }, []);
 
   return (
     <AuthContext.Provider
       // eslint-disable-next-line react/jsx-no-constructed-context-values
       value={{
         authenticated: !!user,
+        loading,
+        setLoading,
         loadingLogin,
         errorMessage,
         user,
