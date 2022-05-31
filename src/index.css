@@ -9,6 +9,22 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  background-color: #ddd;
+}
+
+::-webkit-scrollbar-thumb {
+  box-shadow: inset 0 0 6px rgba(38, 38, 38, 0.3);
+  -webkit-box-shadow: inset 0 0 6px rgba(38, 38, 38, 0.3);
+  background-color: #90cea1;
+}
+
+.main-content {
+  min-height: calc(100vh - 235px);
+}
+
 .loader-wrapper {
   width: 100%;
   height: 100%;

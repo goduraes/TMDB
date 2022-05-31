@@ -1,26 +1,42 @@
 /* This example requires Tailwind CSS v2.0+ */
 import React, { Fragment, useContext } from 'react';
 import { Popover, Transition, Menu } from '@headlessui/react';
+import { NavLink } from 'react-router-dom';
 
 import './index.css';
 
 import {
-  ChartBarIcon,
+  UserIcon,
+  LogoutIcon,
+  HeartIcon,
+  StarIcon,
   MenuIcon,
   SupportIcon,
   XIcon,
+  EyeIcon,
 } from '@heroicons/react/outline';
 import { ChevronDownIcon } from '@heroicons/react/solid';
 
 import { AuthContext } from '../../contexts/auth';
 
-const solutions = [
+const myLists = [
   {
-    name: 'Analytics',
-    description:
-      'Get a better understanding of where your traffic is coming from.',
-    href: '?',
-    icon: ChartBarIcon,
+    name: 'Favorites',
+    description: "Movies and series you've marked as a favorite.",
+    href: '/favorites',
+    icon: HeartIcon,
+  },
+  {
+    name: 'Rated',
+    description: "Movies, series and episodes you've rated.",
+    href: '/rated',
+    icon: StarIcon,
+  },
+  {
+    name: 'Watchlist',
+    description: 'Movies and series to watch.',
+    href: '/watchlist',
+    icon: EyeIcon,
   },
 ];
 const resources = [
@@ -44,13 +60,13 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex justify-between items-center py-6 md:justify-start md:space-x-10">
           <div className="flex justify-start lg:w-0 lg:flex-1">
-            <a href="?">
+            <NavLink to="/">
               <img
                 className="h-8 w-auto sm:h-10"
                 src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_square_1-5bdc75aaebeb75dc7ae79426ddd9be3b2be1e342510f8202baf6bffa71d7f5c4.svg"
                 alt="logo tmdb"
               />
-            </a>
+            </NavLink>
           </div>
           <div className="-mr-2 -my-2 md:hidden">
             <Popover.Button className="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none">
@@ -59,6 +75,12 @@ const Navbar = () => {
             </Popover.Button>
           </div>
           <Popover.Group as="nav" className="hidden md:flex space-x-10">
+            {/* <NavLink
+              to="?"
+              className="text-base font-medium text-gray-500 hover:text-gray-900"
+            >
+              Home
+            </NavLink> */}
             <Popover className="relative">
               {({ open }) => (
                 <>
@@ -68,7 +90,7 @@ const Navbar = () => {
                       'group bg-white rounded-md inline-flex items-center text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-offset-2 focus:ring-green-500',
                     )}
                   >
-                    <span>Solutions</span>
+                    <span>My Lists</span>
                     <ChevronDownIcon
                       className={classNames(
                         open ? 'text-gray-600' : 'text-gray-400',
@@ -90,10 +112,10 @@ const Navbar = () => {
                     <Popover.Panel className="absolute z-10 -ml-4 mt-3 transform px-2 w-screen max-w-md sm:px-0 lg:ml-0 lg:left-1/2 lg:-translate-x-1/2">
                       <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden">
                         <div className="relative grid gap-6 bg-white px-5 py-6 sm:gap-8 sm:p-8">
-                          {solutions.map((item) => (
-                            <a
+                          {myLists.map((item) => (
+                            <NavLink
                               key={item.name}
-                              href={item.href}
+                              to={item.href}
                               className="-m-3 p-3 flex items-start rounded-lg hover:bg-gray-50"
                             >
                               <item.icon
@@ -108,7 +130,7 @@ const Navbar = () => {
                                   {item.description}
                                 </p>
                               </div>
-                            </a>
+                            </NavLink>
                           ))}
                         </div>
                       </div>
@@ -117,15 +139,7 @@ const Navbar = () => {
                 </>
               )}
             </Popover>
-
-            <a
-              href="?"
-              className="text-base font-medium text-gray-500 hover:text-gray-900"
-            >
-              Pricing
-            </a>
-
-            <Popover className="relative">
+            {/* <Popover className="relative">
               {({ open }) => (
                 <>
                   <Popover.Button
@@ -157,9 +171,9 @@ const Navbar = () => {
                       <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden">
                         <div className="relative grid gap-6 bg-white px-5 py-6 sm:gap-8 sm:p-8">
                           {resources.map((item) => (
-                            <a
+                            <NavLink
                               key={item.name}
-                              href={item.href}
+                              to={item.href}
                               className="-m-3 p-3 flex items-start rounded-lg hover:bg-gray-50"
                             >
                               <item.icon
@@ -174,7 +188,7 @@ const Navbar = () => {
                                   {item.description}
                                 </p>
                               </div>
-                            </a>
+                            </NavLink>
                           ))}
                         </div>
                       </div>
@@ -182,14 +196,16 @@ const Navbar = () => {
                   </Transition>
                 </>
               )}
-            </Popover>
+            </Popover> */}
           </Popover.Group>
           <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
             <Menu as="div" className="relative inline-block text-left">
               <div>
-                <Menu.Button className="icon-user inline-flex justify-center w-full rounded-md px-4 py-2 bg-white text-sm font-medium text-gray-700
-                flex items-start rounded-lg hover:bg-gray-50">
-                  {user.username}
+                <Menu.Button className="icon-user border inline-flex justify-center items-center px-4 py-2 text-sm font-medium text-gray-700
+                flex rounded-lg hover:bg-gray-50"
+                >
+                  <UserIcon className="h-4 w-4 mr-1" aria-hidden="true" />
+                  <span>{user.username}</span>
                 </Menu.Button>
               </div>
 
@@ -202,8 +218,8 @@ const Navbar = () => {
                 leaveFrom="transform opacity-100 scale-100"
                 leaveTo="transform opacity-0 scale-95"
               >
-                <Menu.Items className="origin-top-right absolute right-0 mt-2 w-36 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                  <div className="py-1">
+                <Menu.Items className="origin-top-right mt-1 absolute right-0 w-full rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                  <div>
                     <form method="POST" action="?">
                       <Menu.Item>
                         {({ active }) => (
@@ -214,10 +230,14 @@ const Navbar = () => {
                               active
                                 ? 'bg-gray-100 text-gray-900'
                                 : 'text-gray-700',
-                              'block w-full text-left px-4 py-2 text-sm',
+                              'flex items-center w-full text-left px-4 py-2 text-sm',
                             )}
                           >
-                            Sair
+                            <LogoutIcon
+                              className="h-4 w-4 mr-1"
+                              aria-hidden="true"
+                            />
+                            <span>Logout</span>
                           </button>
                         )}
                       </Menu.Item>
@@ -262,10 +282,10 @@ const Navbar = () => {
               </div>
               <div className="mt-6">
                 <nav className="grid gap-y-8">
-                  {solutions.map((item) => (
-                    <a
+                  {myLists.map((item) => (
+                    <NavLink
                       key={item.name}
-                      href={item.href}
+                      to={item.href}
                       className="-m-3 p-3 flex items-center rounded-md hover:bg-gray-50"
                     >
                       <item.icon
@@ -275,28 +295,28 @@ const Navbar = () => {
                       <span className="ml-3 text-base font-medium text-gray-900">
                         {item.name}
                       </span>
-                    </a>
+                    </NavLink>
                   ))}
                 </nav>
               </div>
             </div>
             <div className="py-6 px-5 space-y-6">
               <div className="grid grid-cols-2 gap-y-4 gap-x-8">
-                <a
-                  href="?"
+                {/* <NavLink
+                  to="?"
                   className="text-base font-medium text-gray-900 hover:text-gray-700"
                 >
-                  Pricing
-                </a>
-                {resources.map((item) => (
-                  <a
+                  Home
+                </NavLink> */}
+                {/* {resources.map((item) => (
+                  <NavLink
                     key={item.name}
-                    href={item.href}
+                    to={item.href}
                     className="text-base font-medium text-gray-900 hover:text-gray-700"
                   >
                     {item.name}
-                  </a>
-                ))}
+                  </NavLink>
+                ))} */}
               </div>
               <div>
                 <button
@@ -305,7 +325,7 @@ const Navbar = () => {
                   className="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md
                     shadow-sm text-base font-medium text-gray-700 bg-gray-300 hover:bg-gray-400"
                 >
-                  Sair
+                  Logout
                 </button>
               </div>
             </div>
