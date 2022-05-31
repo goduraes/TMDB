@@ -1,0 +1,11 @@
+button svg {
+  transition: .4s;
+}
+
+button[aria-expanded="true"] svg {
+  transform: rotate(180deg);
+}
+
+button.icon-user[aria-expanded="true"] svg {
+  transform: none;
+}

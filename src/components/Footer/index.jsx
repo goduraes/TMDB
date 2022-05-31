@@ -1,13 +1,12 @@
 import React from 'react';
-import './index.css';
 
 const Footer = () => {
   return (
     <footer
       id="footer"
-      className="text-center lg:text-left bg-green-100 text-gray-600"
+      className="text-center lg:text-left bg-gray-100 text-gray-600"
     >
-      <div className="flex justify-center items-center lg:justify-between p-6 border-b border-green-300">
+      <div className="flex justify-center items-center lg:justify-between p-6 border-b border-gray-300">
         <div className="mr-12 hidden lg:block">
           <span>Get connected with me on social networks:</span>
         </div>
@@ -80,7 +79,7 @@ const Footer = () => {
           </a>
         </div>
       </div>
-      <div className="text-center p-6 bg-green-200">
+      <div className="text-center p-6 bg-gray-200">
         <span>© 2022 Copyright: </span>
         <a
           className="text-gray-600 font-semibold"

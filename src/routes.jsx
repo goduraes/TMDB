@@ -24,10 +24,10 @@ const Private = ({ children }) => {
   if (loading) {
     return loadingItem;
   }
-
   if (!authenticated) {
     return <Navigate to="/login" />;
   }
+
   return children;
 };
 

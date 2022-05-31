@@ -89,6 +89,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const recoveredUser = localStorage.getItem('user');
+    setUser({});
     if (recoveredUser) {
       const userParse = JSON.parse(recoveredUser);
       if (userParse.session_id) {
