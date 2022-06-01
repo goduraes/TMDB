@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Scrollbar } from 'swiper';
+import { SearchIcon } from '@heroicons/react/solid';
 import API from '../../service/api';
 import CardItem from '../../components/CardItem';
 import Loading from '../../components/Loading';
@@ -13,6 +14,7 @@ const Home = () => {
   const [trendingList, setTrendingList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [textSearch, setTextSearch] = useState('');
 
   const numberSlidesPerView = () => {
     const { innerWidth: width } = window;
@@ -27,6 +29,10 @@ const Home = () => {
     }
     return 7;
   };
+
+  const search = () => {
+    alert(textSearch);
+  }
 
   useEffect(() => {
     API.get(`/trending/all/day?api_key=${process.env.REACT_APP_API_KEY}`)
@@ -43,13 +49,55 @@ const Home = () => {
 
   return (
     <div className="main-content container max-w-7xl mx-auto px-4 sm:px-6">
-      <h1 className="text-2xl font-bold text-gray-800 py-4">
-        Daily Trends {numberSlidesPerView()}
-      </h1>
       {loading && <Loading opacity={0.7} />}
 
+      <div className="bg-search">
+        <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
+          <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+            <span className="block">Welcome.</span>
+            <span className="block blue-tmdb-text mt-2">
+              Millions of movies, TV shows and people to discover. Explore now.
+            </span>
+          </h2>
+
+          <form className="mt-5">
+            <label
+              htmlFor="default-search"
+              className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-gray-300"
+            >
+              Search
+            </label>
+            <div className="relative">
+              <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none green-tmdb-text">
+                <SearchIcon className="h-4 w-4" aria-hidden="true" />
+              </div>
+              <input
+                type="text"
+                id="default-search"
+                autoComplete="off"
+                value={textSearch}
+                onChange={(e) => setTextSearch(e.target.value)}
+                className="block p-4 pl-10 pr-20 w-full text-gray-900 bg-gray-50 rounded-lg outline-none"
+                placeholder="Search for a movie, tv show, person......"
+              />
+              <button
+                onClick={search}
+                type="submit"
+                className="bg-tmdb-gren text-white absolute right-2.5 bottom-2.5 hover:opacity-80 font-medium rounded-lg text-sm px-3 py-2"
+              >
+                Search
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
       {!loading && !error && (
-        <div>
+        <div className="mb-3">
+          <h1 className="text-2xl font-bold text-gray-800 py-4">
+            Daily Trends
+          </h1>
+
           <Swiper
             spaceBetween={30}
             slidesPerView={numberSlidesPerView()}

@@ -4,16 +4,16 @@ const Footer = () => {
   return (
     <footer
       id="footer"
-      className="text-center lg:text-left bg-gray-100 text-gray-600"
+      className="text-center lg:text-left bg-tmdb-dark-blue-light text-gray-200"
     >
-      <div className="flex justify-center items-center lg:justify-between p-6 border-b border-gray-300">
+      <div className="flex justify-center items-center lg:justify-between p-6">
         <div className="mr-12 hidden lg:block">
           <span>Get connected with me on social networks:</span>
         </div>
         <div className="flex justify-center">
           <a
             href="https://www.instagram.com/goduraes/"
-            className="mr-6 text-gray-600"
+            className="mr-6 text-gray-200"
             target="_blank"
             rel="noreferrer"
           >
@@ -35,7 +35,7 @@ const Footer = () => {
           </a>
           <a
             href="https://www.linkedin.com/in/gabriel-dur%C3%A3es-2a9189104/"
-            className="mr-6 text-gray-600"
+            className="mr-6 text-gray-200"
             target="_blank"
             rel="noreferrer"
           >
@@ -57,7 +57,7 @@ const Footer = () => {
           </a>
           <a
             href="https://github.com/goduraes"
-            className="text-gray-600"
+            className="text-gray-200"
             target="_blank"
             rel="noreferrer"
           >
@@ -79,10 +79,10 @@ const Footer = () => {
           </a>
         </div>
       </div>
-      <div className="text-center p-6 bg-gray-200">
+      <div className="text-center p-6 bg-tmdb-dark-blue text-gray-200">
         <span>© 2022 Copyright: </span>
         <a
-          className="text-gray-600 font-semibold"
+          className="text-gray-200 font-semibold"
           href="https://www.instagram.com/goduraes/"
           target="_blank"
           rel="noreferrer"

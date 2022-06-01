@@ -1,0 +1,9 @@
+.bg-search {
+  background-image: url("https://www.themoviedb.org/t/p/w1920_and_h600_multi_faces_filter(duotone,032541,01b4e4)/tlEFuIlaxRPXIYVHXbOSAMCfWqk.jpg");
+  background-color: #cccccc;
+  background-repeat: no-repeat;
+	background-size: cover;
+  background-position: center;
+  width: 100%;
+  min-height: 300px;
+}

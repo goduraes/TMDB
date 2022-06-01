@@ -7,7 +7,8 @@ html, body {
   font-family: 'Source Sans Pro', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: linear-gradient(#fff, #ddd);
+	background-color: #d5fefd;
+  background-image: linear-gradient(315deg, #d5fefd 0%, #fffcff 74%);
 }
 
 ::-webkit-scrollbar {
@@ -32,4 +33,27 @@ html, body {
 
 .swiper-scrollbar-drag {
   background: rgba(0, 0, 0, 0.1) !important;
+}
+
+.blue-tmdb-text {
+  color: #0d253f;
+}
+
+.green-tmdb-text {
+  color: #90cea1;
+}
+
+.bg-tmdb-gren {
+  background: #90cea1;
+}
+.bg-tmdb-blue {
+  background: #01b4e4;
+}
+
+.bg-tmdb-dark-blue {
+  background: #0d253f;
+}
+
+.bg-tmdb-dark-blue-light {
+  background: rgba(13, 37, 63, .9);
 }

@@ -43,7 +43,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   // pega informações do usuário via token de sessao
-  const getUser = async (session) => {
+  const getUser = async (session, login) => {
     await API.get(
       `/account?api_key=${process.env.REACT_APP_API_KEY}&session_id=${session}`,
     )
@@ -52,7 +52,7 @@ export const AuthProvider = ({ children }) => {
         loggedUser.session_id = session;
         localStorage.setItem('user', JSON.stringify(loggedUser));
         setUser(loggedUser);
-        navigate('/');
+        if (login) navigate('/');
       })
       .catch(() => {
         setErrorMessage('Oops! Something went wrong, try again.');
@@ -78,7 +78,7 @@ export const AuthProvider = ({ children }) => {
         if (resp.data.success) {
           const session = await createSession(resp.data.request_token);
           if (session.data.success) {
-            await getUser(session.data.session_id);
+            await getUser(session.data.session_id, true);
           } else {
             setErrorMessage('Oops! Something went wrong, try again.');
           }
