@@ -37,6 +37,7 @@
       "jsx-a11y/label-has-associated-control": "off",
       "react/style-prop-object": "off",
       "react/prop-types": [2, { "ignore": ["children"] }],
+      "import/no-unresolved": "off",
       "import/extensions": [
         "error",
         "ignorePackages",

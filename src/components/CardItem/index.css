@@ -1,0 +1,26 @@
+#cardItem {
+  width: 150px;
+  cursor: pointer;
+}
+
+#cardItem img {
+  transition: .4s;
+}
+
+#cardItem:hover img {
+  filter: saturate(0.3);
+}
+
+#cardItem .voteAverage {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  top: 200px;
+  left: 5px;
+  height: 36px;
+  width: 36px;
+  background: #0d253f;
+  border: 2px solid #01b4e4;
+}

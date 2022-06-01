@@ -7,6 +7,9 @@ import {
 } from 'react-router-dom';
 import Loading from './components/Loading';
 
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
+
 import Home from './pages/Home';
 import Login from './pages/Login';
 
@@ -21,7 +24,13 @@ const Private = ({ children }) => {
     return <Navigate to="/login" />;
   }
 
-  return children;
+  return (
+    <>
+      <Navbar />
+      {children}
+      <Footer />
+    </>
+  );
 };
 
 const AppRoutes = () => {
