@@ -11,7 +11,6 @@ import {
   HeartIcon,
   StarIcon,
   MenuIcon,
-  SupportIcon,
   XIcon,
   EyeIcon,
 } from '@heroicons/react/outline';
@@ -39,15 +38,15 @@ const myLists = [
     icon: EyeIcon,
   },
 ];
-const resources = [
-  {
-    name: 'Help Center',
-    description:
-      'Get all of your questions answered in our forums or contact support.',
-    href: '?',
-    icon: SupportIcon,
-  },
-];
+// const resources = [
+//   {
+//     name: 'Help Center',
+//     description:
+//       'Get all of your questions answered in our forums or contact support.',
+//     href: '?',
+//     icon: SupportIcon,
+//   },
+// ];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
@@ -201,7 +200,8 @@ const Navbar = () => {
           <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
             <Menu as="div" className="relative inline-block text-left">
               <div>
-                <Menu.Button className="icon-user border inline-flex justify-center items-center px-4 py-2 text-sm font-medium text-gray-700
+                <Menu.Button
+                  className="icon-user border inline-flex justify-center items-center px-4 py-2 text-sm font-medium text-gray-700
                 flex rounded-lg hover:bg-gray-50"
                 >
                   <UserIcon className="h-4 w-4 mr-1" aria-hidden="true" />

@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-
 const CardItem = ({ item }) => {
   const { id, media_type, profile_path, poster_path, title, name } = item;
   const titleItem = media_type === 'movie' ? title : name;
