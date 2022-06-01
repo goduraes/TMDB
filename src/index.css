@@ -24,7 +24,7 @@ html, body {
 }
 
 .main-content {
-  min-height: calc(100vh - 235px);
+  min-height: calc(100vh - 236px);
 }
 
 .swiper-horizontal>.swiper-scrollbar {

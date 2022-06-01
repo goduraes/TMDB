@@ -1,7 +1,7 @@
 /* This example requires Tailwind CSS v2.0+ */
 import React, { Fragment, useContext, useState } from 'react';
 import { Popover, Transition, Menu } from '@headlessui/react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 
 import './index.css';
 
@@ -53,13 +53,15 @@ const classNames = (...classes) => {
 };
 
 const Navbar = () => {
+  const navigate = useNavigate();
   const { user, logout } = useContext(AuthContext);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [textSearch, setTextSearch] = useState('');
 
   const search = () => {
-    alert(textSearch);
-  }
+    navigate(`/search?q=${textSearch}`);
+    setIsSidebarOpen(false);
+  };
 
   return (
     <>
@@ -395,8 +397,8 @@ const Navbar = () => {
         leaveFrom="opacity-100"
         leaveTo="opacity-0 "
       >
-        <div className="px-5 searchBar absolute bg-tmdb-gren w-full">
-          <form className="m-5 container mx-auto">
+        <div className="px-5 searchBar absolute bg-tmdb-gren w-full z-30">
+          <div className="m-5 container mx-auto">
             <label
               htmlFor="default-search"
               className="mb-2 text-sm font-medium text-white sr-only dark:text-white"
@@ -424,7 +426,7 @@ const Navbar = () => {
                 Search
               </button>
             </div>
-          </form>
+          </div>
         </div>
       </Transition>
     </>

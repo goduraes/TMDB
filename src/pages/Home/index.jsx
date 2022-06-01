@@ -1,20 +1,25 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Scrollbar } from 'swiper';
 import { SearchIcon } from '@heroicons/react/solid';
 import API from '../../service/api';
 import CardItem from '../../components/CardItem';
 import Loading from '../../components/Loading';
+import DetailsItem from '../../components/DetailsItem';
 
 import 'swiper/css';
 import 'swiper/css/scrollbar';
 import './index.css';
 
 const Home = () => {
+  const navigate = useNavigate();
   const [trendingList, setTrendingList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [textSearch, setTextSearch] = useState('');
+  const [openDetails, setOpenDetails] = useState(false);
+  const [itemDetails, setItemDetails] = useState(null);
 
   const numberSlidesPerView = () => {
     const { innerWidth: width } = window;
@@ -31,10 +36,11 @@ const Home = () => {
   };
 
   const search = () => {
-    alert(textSearch);
-  }
+    navigate(`/search?q=${textSearch}`);
+  };
 
   useEffect(() => {
+    document.body.classList.add('overflow-hidden');
     API.get(`/trending/all/day?api_key=${process.env.REACT_APP_API_KEY}`)
       .then((resp) => {
         setTrendingList(resp.data.results);
@@ -43,13 +49,14 @@ const Home = () => {
         setError(true);
       })
       .finally(() => {
+        document.body.classList.remove('overflow-hidden');
         setLoading(false);
       });
   }, []);
 
   return (
     <div className="main-content container max-w-7xl mx-auto px-4 sm:px-6">
-      {loading && <Loading opacity={0.7} />}
+      {loading && <Loading opacity={0.3} />}
 
       <div className="bg-search">
         <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
@@ -92,12 +99,10 @@ const Home = () => {
         </div>
       </div>
 
+      <h1 className="text-2xl font-bold text-gray-800 py-4">Daily Trends</h1>
+
       {!loading && !error && (
         <div className="mb-3">
-          <h1 className="text-2xl font-bold text-gray-800 py-4">
-            Daily Trends
-          </h1>
-
           <Swiper
             spaceBetween={30}
             slidesPerView={numberSlidesPerView()}
@@ -105,17 +110,27 @@ const Home = () => {
             modules={[Scrollbar]}
           >
             {trendingList.map((item) => (
-              <SwiperSlide key={item.id} className="mb-5">
+              <SwiperSlide
+                key={item.id}
+                className="mb-5"
+                onClick={() => {
+                  setItemDetails(item);
+                  setOpenDetails(true);
+                }}
+              >
                 <CardItem item={item} />
               </SwiperSlide>
             ))}
           </Swiper>
+          {openDetails && (
+            <DetailsItem onClose={setOpenDetails} item={itemDetails} />
+          )}
         </div>
       )}
 
       {!loading && error && (
         <div
-          className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-10"
+          className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-5 mb-10"
           role="alert"
         >
           <strong className="font-bold">Ops! </strong>

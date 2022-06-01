@@ -12,6 +12,7 @@ import Footer from './components/Footer';
 
 import Home from './pages/Home';
 import Login from './pages/Login';
+import Search from './pages/Search';
 
 import { AuthProvider, AuthContext } from './contexts/auth';
 
@@ -45,6 +46,15 @@ const AppRoutes = () => {
             element={
               <Private>
                 <Home />
+              </Private>
+            }
+          />
+          <Route
+            exact
+            path="/search"
+            element={
+              <Private>
+                <Search />
               </Private>
             }
           />
