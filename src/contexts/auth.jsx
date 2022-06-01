@@ -13,10 +13,16 @@ export const AuthProvider = ({ children }) => {
 
   // cria o token
   const createRequestToken = async () => {
-    // gera o token de requisição
     const requestToken = await API.get(
       `/authentication/token/new?api_key=${process.env.REACT_APP_API_KEY}`,
-    );
+    ).catch((error) => {
+      setErrorMessage(
+        error.response.data.status_message
+          ? error.response.data.status_message
+          : 'Oops! Something went wrong, try again.',
+      );
+      setLoadingLogin(false);
+    });
     return requestToken;
   };
 
@@ -25,7 +31,14 @@ export const AuthProvider = ({ children }) => {
     const session = await API.post(
       `/authentication/session/new?api_key=${process.env.REACT_APP_API_KEY}`,
       { request_token: requestToken },
-    );
+    ).catch((error) => {
+      setErrorMessage(
+        error.response.data.status_message
+          ? error.response.data.status_message
+          : 'Oops! Something went wrong, try again.',
+      );
+      setLoadingLogin(false);
+    });
     return session;
   };
 
@@ -89,7 +102,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const recoveredUser = localStorage.getItem('user');
-    setUser({});
+    setUser(recoveredUser);
     if (recoveredUser) {
       const userParse = JSON.parse(recoveredUser);
       if (userParse.session_id) {

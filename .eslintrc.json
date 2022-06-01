@@ -28,6 +28,7 @@
     "rules": {
       "react/function-component-definition": ["off", {"namedComponents": "function-declaration"}],
       "react-hooks/exhaustive-deps": "off",
+      "camelcase": "off",
       "react-hooks/rules-of-hooks": "error",
       "no-unused-vars": "warn",
       "react/jsx-filename-extension": [1, {"extensions": [".tsx", ".jsx"] }],

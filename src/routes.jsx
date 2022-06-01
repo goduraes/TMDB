@@ -5,24 +5,17 @@ import {
   Routes,
   Navigate,
 } from 'react-router-dom';
+import Loading from './components/Loading';
 
 import Home from './pages/Home';
 import Login from './pages/Login';
 
 import { AuthProvider, AuthContext } from './contexts/auth';
 
-const loadingItem = (
-  <div className="loader-wrapper">
-    <span className="loader">
-      <span className="loader-inner" />
-    </span>
-  </div>
-);
-
 const Private = ({ children }) => {
   const { authenticated, loading } = useContext(AuthContext);
   if (loading) {
-    return loadingItem;
+    return <Loading />;
   }
   if (!authenticated) {
     return <Navigate to="/login" />;
