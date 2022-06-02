@@ -9,7 +9,8 @@
 }
 
 #cardItem:hover img {
-  filter: saturate(0.3);
+  -webkit-filter: brightness(.5);
+   filter: brightness(.5);
 }
 
 #cardItem .voteAverage {

@@ -1,0 +1,52 @@
+#detailsItem .voteAverage {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  bottom: -15px;
+  left: 10px;
+  height: 50px;
+  width: 50px;
+  background: #fff;
+}
+
+#detailsItem .voteAverage .ratio {
+  height: 45px;
+  width: 45px;
+  border-radius: 50%;
+  position: relative;
+  clip-path: circle(50%);
+}
+
+#detailsItem .voteAverage .ratio::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-image: conic-gradient(#01b4e4 0 calc(var(--ratio) * 360deg), #999 calc(var(--ratio) * 360deg) 360deg);
+  z-index: -2;
+}
+
+#detailsItem .voteAverage .ratio::after {
+  content: '';
+  position: absolute;
+  width: 85%;
+  height: 85%;
+  top: 8%;
+  left: 7%;
+  background-color: #fff;
+  border-radius: 50%;
+  z-index: -1;
+}
+
+#detailsItem .shadowTX {
+  text-shadow: 1px 1px 10px #000;
+}
+
+#detailsItem .backdropPath {
+  max-height: 250px;
+  min-height: 180px;
+}
