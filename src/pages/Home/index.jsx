@@ -84,6 +84,7 @@ const Home = () => {
                 autoComplete="off"
                 value={textSearch}
                 onChange={(e) => setTextSearch(e.target.value)}
+                onKeyPress={(e) => e.charCode === 13 && search()}
                 className="block p-4 pl-10 pr-20 w-full text-gray-900 bg-gray-50 rounded-lg outline-none"
                 placeholder="Search for a movie, tv show, person......"
               />
@@ -122,9 +123,12 @@ const Home = () => {
               </SwiperSlide>
             ))}
           </Swiper>
-          {openDetails && (
-            <DetailsItem onClose={setOpenDetails} item={itemDetails} />
-          )}
+
+          <DetailsItem
+            open={openDetails}
+            onClose={setOpenDetails}
+            item={itemDetails}
+          />
         </div>
       )}
 

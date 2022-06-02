@@ -55,6 +55,7 @@ const Login = () => {
               placeholder="****************"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              onKeyPress={(e) => e.charCode === 13 && handleSubmit()}
               className={`border rounded py-2 px-3 w-full focus:shadow-outline focus:border-gray-400 focus:outline-none
               ${!!errorMessage && 'border-red-500'}`}
             />

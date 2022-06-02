@@ -9,15 +9,8 @@ const Ratio = styled.div`
 `;
 
 const CardItem = ({ item }) => {
-  const {
-    id,
-    media_type,
-    profile_path,
-    poster_path,
-    title,
-    name,
-    vote_average,
-  } = item;
+  const { media_type, profile_path, poster_path, title, name, vote_average } =
+    item;
   const titleItem = media_type === 'movie' ? title : name;
 
   let urlImg = media_type === 'person' ? profile_path : poster_path;
@@ -58,7 +51,6 @@ CardItem.propTypes = {
     backdrop_path: PropTypes.string,
     profile_path: PropTypes.string,
     name: PropTypes.string,
-    id: PropTypes.number,
     media_type: PropTypes.string,
     poster_path: PropTypes.string,
     title: PropTypes.string,

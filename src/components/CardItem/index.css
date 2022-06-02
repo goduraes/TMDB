@@ -1,6 +1,7 @@
 #cardItem {
   cursor: pointer;
   min-width: 150px;
+  max-width: 200px;
 }
 
 #cardItem img {

@@ -36,44 +36,39 @@ const timeConvert = (n) => {
   return `${rhours}h${rminutes}m`;
 };
 
-
-const DetailsItem = ({ onClose, item }) => {
-  const {
-    id,
-    media_type,
-    vote_average,
-    backdrop_path,
-    poster_path,
-    title,
-    name,
-  } = item;
+const DetailsItem = ({ open, onClose, item }) => {
   const [itemDetails, setItemDetails] = useState({});
   const [error, setError] = useState(false);
   const [loadingItem, setLoadingItem] = useState(true);
-
-  let percentageRatio = 0;
-  if (vote_average) {
-    percentageRatio =
-      vote_average !== 10
-        ? `.${vote_average.toFixed(1).replace('.', '')}`
-        : vote_average;
-  }
+  const [percentageRatio, setPercentageRatio] = useState(0);
 
   useEffect(() => {
-    API.get(`/${media_type}/${id}?api_key=${process.env.REACT_APP_API_KEY}`)
-      .then((resp) => {
-        setItemDetails(resp.data);
-      })
-      .catch(() => {
-        setError(true);
-      })
-      .finally(() => {
-        setLoadingItem(false);
-      });
-  }, []);
+    if (open) {
+      if (item.vote_average) {
+        const value =
+          item.vote_average !== 10
+            ? `.${item.vote_average.toFixed(1).replace('.', '')}`
+            : item.vote_average;
+        setPercentageRatio(value);
+      }
+
+      API.get(
+        `/${item.media_type}/${item.id}?api_key=${process.env.REACT_APP_API_KEY}`,
+      )
+        .then((resp) => {
+          setItemDetails(resp.data);
+        })
+        .catch(() => {
+          setError(true);
+        })
+        .finally(() => {
+          setLoadingItem(false);
+        });
+    }
+  }, [open]);
 
   return (
-    <Transition.Root show as={Fragment}>
+    <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={onClose}>
         <Transition.Child
           as={Fragment}
@@ -124,16 +119,20 @@ const DetailsItem = ({ onClose, item }) => {
                     id="detailsItem"
                     className="flex h-full flex-col overflow-y-scroll bg-tmdb-dark-blue shadow-xl"
                   >
-                    {!loadingItem && !error && (
+                    {open && !loadingItem && !error && (
                       <div>
-                        {media_type === 'movie' || media_type === 'tv' ? (
+                        {item.media_type === 'movie' ||
+                        item.media_type === 'tv' ? (
                           <>
                             <div className="relative mb-7">
-                              <Dialog.Title className="absolute z-10 py-4 w-full h-full text-center flex flex-col
+                              <Dialog.Title
+                                className="absolute z-10 py-4 w-full h-full text-center flex flex-col
                                 items-center justify-center text-lg text-white font-medium "
                               >
                                 <span className="text-2xl md:text-4xl px-2 font-bold shadowTX">
-                                  {media_type === 'movie' ? title : name}
+                                  {item.media_type === 'movie'
+                                    ? item.title
+                                    : item.name}
                                 </span>
                                 <span className="text-sm md:text-1xl px-2 italic mt-2 shadowTX">
                                   {itemDetails.tagline}
@@ -141,16 +140,16 @@ const DetailsItem = ({ onClose, item }) => {
                               </Dialog.Title>
                               <TypeItem
                                 className="absolute z-10 text-white text-xs	md:text-sm p-1 rounded-lg px-3"
-                                type={media_type}
+                                type={item.media_type}
                               >
-                                {media_type}
+                                {item.media_type}
                               </TypeItem>
                               <Status className="absolute bg-black z-10 text-white text-xs md:text-sm p-1 rounded-lg px-3">
                                 {itemDetails.status}
                               </Status>
                               <div className="voteAverage font-bold text-gray-900 z-10">
                                 <span className="absolute z-20">
-                                  {vote_average}
+                                  {item.vote_average}
                                 </span>
                                 <Ratio
                                   className="ratio z-10"
@@ -158,10 +157,10 @@ const DetailsItem = ({ onClose, item }) => {
                                 />
                               </div>
                               <div className="backdropPath">
-                                {backdrop_path && (
+                                {item.backdrop_path && (
                                   <img
                                     className="w-full opacity-60"
-                                    src={`https://image.tmdb.org/t/p/w500/${backdrop_path}`}
+                                    src={`https://image.tmdb.org/t/p/w500/${item.backdrop_path}`}
                                     alt="Backdrop"
                                   />
                                 )}
@@ -172,7 +171,11 @@ const DetailsItem = ({ onClose, item }) => {
                               <img
                                 width={150}
                                 className="rounded-lg hidden md:block"
-                                src={poster_path ? `https://image.tmdb.org/t/p/w200/${poster_path}` : '200x300.png'}
+                                src={
+                                  item.poster_path
+                                    ? `https://image.tmdb.org/t/p/w200/${item.poster_path}`
+                                    : '200x300.png'
+                                }
                                 alt="Backdrop"
                               />
                               <div className="w-full px-4 sm:px-6">
@@ -206,20 +209,30 @@ const DetailsItem = ({ onClose, item }) => {
                                         <span>{itemDetails.release_date} </span>
                                       )}
                                       {itemDetails.first_air_date && (
-                                        <span>{itemDetails.first_air_date} </span>
+                                        <span>
+                                          {itemDetails.first_air_date}{' '}
+                                        </span>
                                       )}
                                     </div>
                                   )}
                                   {itemDetails.number_of_seasons && (
                                     <div>
-                                      <span className="font-bold">Seasons: </span>
-                                      <span>{itemDetails.number_of_seasons} </span>
+                                      <span className="font-bold">
+                                        Seasons:{' '}
+                                      </span>
+                                      <span>
+                                        {itemDetails.number_of_seasons}{' '}
+                                      </span>
                                     </div>
                                   )}
                                   {itemDetails.number_of_episodes && (
                                     <div>
-                                      <span className="font-bold">Episodes: </span>
-                                      <span>{itemDetails.number_of_episodes} </span>
+                                      <span className="font-bold">
+                                        Episodes:{' '}
+                                      </span>
+                                      <span>
+                                        {itemDetails.number_of_episodes}{' '}
+                                      </span>
                                     </div>
                                   )}
                                 </div>
@@ -302,15 +315,18 @@ const DetailsItem = ({ onClose, item }) => {
                                 </span>
                               </Dialog.Title>
                             </div>
-                            <div className=" flex-1 px-4 sm:px-6">
-                              <div className="text-white mt-2">
-                                <span className="text-white font-bold w-full">
-                                  Birth:
-                                </span>
-                                <span> {itemDetails.birthday}, </span>
-                                <span> {itemDetails.place_of_birth}</span>
-                              </div>
-                            </div>
+                            {itemDetails.birthday &&
+                              itemDetails.place_of_birth && (
+                                <div className=" flex-1 px-4 sm:px-6">
+                                  <div className="text-white mt-2">
+                                    <span className="text-white font-bold w-full">
+                                      Birth:
+                                    </span>
+                                    <span> {itemDetails.birthday}, </span>
+                                    <span> {itemDetails.place_of_birth}</span>
+                                  </div>
+                                </div>
+                              )}
                             {itemDetails.biography && (
                               <div className="mt-6 flex-1 px-4 sm:px-6">
                                 <span className="text-2xl text-white font-bold w-full">
@@ -325,8 +341,8 @@ const DetailsItem = ({ onClose, item }) => {
                         )}
                       </div>
                     )}
-                    {loadingItem && !error && <Loading opacity={0} />}
-                    {!loadingItem && error && (
+                    {open && loadingItem && !error && <Loading opacity={0} />}
+                    {open && !loadingItem && error && (
                       <div className="mt-2 px-4 sm:px-6">
                         <div
                           className="mt-2 px-4 sm:px-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-5 mb-10"
@@ -350,8 +366,13 @@ const DetailsItem = ({ onClose, item }) => {
   );
 };
 
+DetailsItem.defaultProps = {
+  item: {},
+};
+
 DetailsItem.propTypes = {
   onClose: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
   item: PropTypes.shape({
     id: PropTypes.number,
     vote_average: PropTypes.number,
@@ -360,7 +381,7 @@ DetailsItem.propTypes = {
     poster_path: PropTypes.string,
     title: PropTypes.string,
     name: PropTypes.string,
-  }).isRequired,
+  }),
 };
 
 export default DetailsItem;

@@ -61,6 +61,7 @@ const Navbar = () => {
   const search = () => {
     navigate(`/search?q=${textSearch}`);
     setIsSidebarOpen(false);
+    setTextSearch('');
   };
 
   return (
@@ -267,7 +268,7 @@ const Navbar = () => {
                 >
                   <Menu.Items className="border-2 border-slate-900 origin-top-right mt-1 absolute right-0 w-full rounded-md shadow-lg bg-tmdb-dark-blue ring-1 ring-black ring-opacity-5 focus:outline-none">
                     <div>
-                      <form method="POST" action="?">
+                      <form>
                         <Menu.Item>
                           {({ active }) => (
                             <button
@@ -415,6 +416,7 @@ const Navbar = () => {
                 autoComplete="off"
                 value={textSearch}
                 onChange={(e) => setTextSearch(e.target.value)}
+                onKeyPress={(e) => e.charCode === 13 && search()}
                 className="block p-4 pl-10 pr-20 w-full bg-gray-50 rounded-lg outline-none"
                 placeholder="Search for a movie, tv show, person......"
               />
