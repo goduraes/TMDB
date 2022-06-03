@@ -55,6 +55,7 @@ const ListMoviesAndTv = ({ type }) => {
 
   useEffect(() => {
     setLoading(true);
+    setUpcomingList([]);
     try {
       getTrending();
       gePopular();

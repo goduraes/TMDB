@@ -23,42 +23,44 @@ const SwiperItens = ({ list, title, mediaType }) => {
   const [openDetails, setOpenDetails] = useState(false);
   const [itemDetails, setItemDetails] = useState(null);
   return (
-    <>
-      <h1 className="text-2xl font-bold text-gray-800 py-4">{title}</h1>
-      <div className="mb-3">
-        <Swiper
-          spaceBetween={30}
-          slidesPerView={numberSlidesPerView()}
-          scrollbar={{ draggable: true }}
-          modules={[Scrollbar]}
-        >
-          {list &&
-            list.length > 0 &&
-            list.map((item) => (
-              <SwiperSlide
-                key={item.id}
-                className="mb-5"
-                onClick={() => {
-                  setItemDetails(
-                    mediaType ? { ...item, media_type: mediaType } : item,
-                  );
-                  setOpenDetails(true);
-                }}
-              >
-                <CardItem
-                  item={mediaType ? { ...item, media_type: mediaType } : item}
-                />
-              </SwiperSlide>
-            ))}
-        </Swiper>
+    <div>
+      {list.length > 0 && (
+        <>
+          <h1 className="text-2xl font-bold text-gray-800 py-4">{title}</h1>
+          <div className="mb-3">
+            <Swiper
+              spaceBetween={30}
+              slidesPerView={numberSlidesPerView()}
+              scrollbar={{ draggable: true }}
+              modules={[Scrollbar]}
+            >
+              {list.map((item) => (
+                <SwiperSlide
+                  key={item.id}
+                  className="mb-5"
+                  onClick={() => {
+                    setItemDetails(
+                      mediaType ? { ...item, media_type: mediaType } : item,
+                    );
+                    setOpenDetails(true);
+                  }}
+                >
+                  <CardItem
+                    item={mediaType ? { ...item, media_type: mediaType } : item}
+                  />
+                </SwiperSlide>
+              ))}
+            </Swiper>
 
-        <DetailsItem
-          open={openDetails}
-          onClose={setOpenDetails}
-          item={itemDetails}
-        />
-      </div>
-    </>
+            <DetailsItem
+              open={openDetails}
+              onClose={setOpenDetails}
+              item={itemDetails}
+            />
+          </div>
+        </>
+      )}
+    </div>
   );
 };
 
