@@ -1,65 +1,69 @@
-import React, { Fragment, useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import React, { useState, useEffect, useContext, Fragment } from 'react';
+import PropTypes from 'prop-types';
 import { Dialog, Transition } from '@headlessui/react';
 import { XIcon } from '@heroicons/react/outline';
-import { FilterIcon, PlusIcon } from '@heroicons/react/solid';
-import Loading from '../../components/Loading';
+import { FilterIcon } from '@heroicons/react/solid';
 import CardItem from '../../components/CardItem';
 import DetailsItem from '../../components/DetailsItem';
 import API from '../../service/api';
+import Loading from '../../components/Loading';
+
+import { AuthContext } from '../../contexts/auth';
+
+import 'swiper/css';
+import 'swiper/css/scrollbar';
 
 const categories = [
-  { name: 'Movies', id: 'movie' },
-  { name: 'TV Shows', id: 'tv' },
-  { name: 'People', id: 'person' },
+  { name: 'Movies', id: 'movies', mediaType: 'movie' },
+  { name: 'TV Shows', id: 'tv', mediaType: 'tv' },
 ];
 
-const Search = () => {
-  const [searchParams] = useSearchParams();
-
+const MyLists = ({ type }) => {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-  const [category, setCategoriy] = useState('movie');
-  const [resultsSearch, setResultsSearch] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const [title, setTitle] = useState('Favorites');
+  const [category, setCategoriy] = useState(categories[0]);
   const [openDetails, setOpenDetails] = useState(false);
   const [itemDetails, setItemDetails] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPage, setTotalPage] = useState(0);
-  const [qParams, setQParams] = useState(0);
+  const { user } = useContext(AuthContext);
+  const [list, setList] = useState([]);
 
-  useEffect(() => {
-    const q = searchParams.get('q');
-    setQParams(q);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
-    if (qParams !== q) {
-      setCurrentPage(1);
-    }
-
-    if (currentPage === 1) {
-      document.body.classList.add('overflow-hidden');
-      setLoading(true);
-    }
+  const getLists = () => {
     API.get(
-      `/search/${category}?query=${q}&api_key=${process.env.REACT_APP_API_KEY}&page=${currentPage}`,
+      `/account/${user.id}/${type}/${category.id}?api_key=${process.env.REACT_APP_API_KEY}&session_id=${user.session_id}`,
     )
       .then((resp) => {
-        const arrayConcat = resultsSearch.concat(resp.data.results);
-        setResultsSearch(
-          resp.data.page === 1 ? resp.data.results : arrayConcat,
-        );
-        setTotalPage(resp.data.total_pages);
+        setList(resp.data.results);
       })
       .catch(() => {
         setError(true);
-      })
-      .finally(() => {
-        setTimeout(() => {
-          document.body.classList.remove('overflow-hidden');
-          setLoading(false);
-        }, 500);
       });
-  }, [category, searchParams, currentPage]);
+  };
+
+  useEffect(() => {
+    setLoading(true);
+    switch (type) {
+      case 'favorite':
+        setTitle('Favorites');
+        break;
+      case 'rated':
+        setTitle('Rated');
+        break;
+      case 'watchlist':
+        setTitle('Watchlist');
+        break;
+      default:
+        setTitle('');
+        break;
+    }
+    try {
+      getLists();
+    } finally {
+      setLoading(false);
+    }
+  }, [type, category]);
 
   return (
     <div className="main-content">
@@ -114,14 +118,14 @@ const Search = () => {
                         <li
                           key={categoryItem.id}
                           className={`${
-                            category === categoryItem.id && 'bg-tmdb-blue'
+                            category.id === categoryItem.id && 'bg-tmdb-blue'
                           } rounded hover:opacity-80`}
                         >
                           <button
                             type="button"
                             onClick={() => {
-                              setCategoriy(categoryItem.id);
-                              setCurrentPage(1);
+                              setCategoriy(categoryItem);
+                              // setCurrentPage(1);
                             }}
                             className="block text-left px-2 py-3 w-full"
                           >
@@ -139,9 +143,7 @@ const Search = () => {
 
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="relative z-10 flex items-baseline justify-between border-b border-gray-200">
-            <h1 className="text-2xl font-bold text-gray-800 py-4">
-              Search Results
-            </h1>
+            <h1 className="text-2xl font-bold text-gray-800 py-4">{title}</h1>
 
             <div className="flex items-center">
               <button
@@ -164,14 +166,14 @@ const Search = () => {
                     <li
                       key={categoryItem.id}
                       className={`${
-                        category === categoryItem.id && 'bg-tmdb-blue'
+                        category.id === categoryItem.id && 'bg-tmdb-blue'
                       } rounded hover:opacity-80`}
                     >
                       <button
                         type="button"
                         onClick={() => {
-                          setCategoriy(categoryItem.id);
-                          setCurrentPage(1);
+                          setCategoriy(categoryItem);
+                          // setCurrentPage(1);
                         }}
                         className="block text-left px-2 py-3 w-full"
                       >
@@ -187,16 +189,21 @@ const Search = () => {
 
                 {!loading && !error && (
                   <div className="flex flex-wrap justify-center gap-4">
-                    {resultsSearch.map((item) => (
+                    {list.map((item) => (
                       <div
                         key={item.id}
                         role="presentation"
                         onClick={() => {
-                          setItemDetails({ ...item, media_type: category });
+                          setItemDetails({
+                            ...item,
+                            media_type: category.mediaType,
+                          });
                           setOpenDetails(true);
                         }}
                       >
-                        <CardItem item={{ ...item, media_type: category }} />
+                        <CardItem
+                          item={{ ...item, media_type: category.mediaType }}
+                        />
                       </div>
                     ))}
 
@@ -206,20 +213,18 @@ const Search = () => {
                       item={itemDetails}
                     />
 
-                    {resultsSearch.length > 0 ||
-                      (totalPage > currentPage && (
-                        <div className="w-full flex justify-center">
-                          <button
-                            onClick={() => setCurrentPage(currentPage + 1)}
-                            type="button"
-                            className="bg-tmdb-dark-blue text-white p-2 rounded-lg"
-                          >
-                            <PlusIcon className="w-5 h-5" aria-hidden="true" />
-                          </button>
-                        </div>
-                      ))}
-
-                    {resultsSearch.length === 0 && (
+                    {/* {totalPage > currentPage && (
+                      <div className="w-full flex justify-center">
+                        <button
+                          onClick={() => setCurrentPage(currentPage + 1)}
+                          type="button"
+                          className="bg-tmdb-dark-blue text-white p-2 rounded-lg"
+                        >
+                          <PlusIcon className="w-5 h-5" aria-hidden="true" />
+                        </button>
+                      </div>
+                    )} */}
+                    {list.length === 0 && (
                       <div
                         className="w-full bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mt-5 mb-10"
                         role="alert"
@@ -251,4 +256,8 @@ const Search = () => {
   );
 };
 
-export default Search;
+MyLists.propTypes = {
+  type: PropTypes.string.isRequired,
+};
+
+export default MyLists;

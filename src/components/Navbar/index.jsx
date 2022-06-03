@@ -38,15 +38,6 @@ const myLists = [
     icon: EyeIcon,
   },
 ];
-// const resources = [
-//   {
-//     name: 'Help Center',
-//     description:
-//       'Get all of your questions answered in our forums or contact support.',
-//     href: '?',
-//     icon: SupportIcon,
-//   },
-// ];
 
 const classNames = (...classes) => {
   return classes.filter(Boolean).join(' ');
@@ -56,6 +47,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const { user, logout } = useContext(AuthContext);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [showMyLists, setShowMyLists] = useState(false);
   const [textSearch, setTextSearch] = useState('');
 
   const search = () => {
@@ -118,6 +110,7 @@ const Navbar = () => {
                 {({ open }) => (
                   <>
                     <Popover.Button
+                      onClick={() => setShowMyLists(!showMyLists)}
                       className={classNames(
                         open ? 'text-white' : 'text-white',
                         'group bg-tmdb-dark-blue rounded-md inline-flex items-center text-base font-bold hover:opacity-80 outline-none',
@@ -135,6 +128,7 @@ const Navbar = () => {
 
                     <Transition
                       as={Fragment}
+                      show={showMyLists}
                       enter="transition ease-out duration-200"
                       enterFrom="opacity-0 translate-y-1"
                       enterTo="opacity-100 translate-y-0"
@@ -147,6 +141,7 @@ const Navbar = () => {
                           <div className="relative grid gap-6 bg-tmdb-dark-blue px-5 py-6 sm:gap-8 sm:p-8">
                             {myLists.map((item) => (
                               <NavLink
+                                onClick={() => setShowMyLists(false)}
                                 key={item.name}
                                 to={item.href}
                                 className="-m-3 p-3 flex items-start rounded-lg hover:bg-slate-900	"
@@ -172,64 +167,6 @@ const Navbar = () => {
                   </>
                 )}
               </Popover>
-              {/* <Popover className="relative">
-                {({ open }) => (
-                  <>
-                    <Popover.Button
-                      className={classNames(
-                        open ? 'text-white' : 'text-white',
-                        'group bg-tmdb-dark-blue rounded-md inline-flex items-center text-base font-medium hover:opacity-80 focus:outline-none focus:ring-offset-2 focus:ring-green-500',
-                      )}
-                    >
-                      <span>More</span>
-                      <ChevronDownIcon
-                        className={classNames(
-                          open ? 'text-white' : 'text-white',
-                          'ml-2 h-5 w-5 group-hover:opacity-80',
-                        )}
-                        aria-hidden="true"
-                      />
-                    </Popover.Button>
-
-                    <Transition
-                      as={Fragment}
-                      enter="transition ease-out duration-200"
-                      enterFrom="opacity-0 translate-y-1"
-                      enterTo="opacity-100 translate-y-0"
-                      leave="transition ease-in duration-150"
-                      leaveFrom="opacity-100 translate-y-0"
-                      leaveTo="opacity-0 translate-y-1"
-                    >
-                      <Popover.Panel className="absolute z-30 left-1/2 transform -translate-x-1/2 mt-3 px-2 w-screen max-w-md sm:px-0">
-                        <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden">
-                          <div className="relative grid gap-6 bg-tmdb-dark-blue px-5 py-6 sm:gap-8 sm:p-8">
-                            {resources.map((item) => (
-                              <NavLink
-                                key={item.name}
-                                to={item.href}
-                                className="-m-3 p-3 flex items-start rounded-lg hover:bg-slate-900	"
-                              >
-                                <item.icon
-                                  className="flex-shrink-0 h-6 w-6 text-green-600"
-                                  aria-hidden="true"
-                                />
-                                <div className="ml-4">
-                                  <p className="text-base font-medium text-white">
-                                    {item.name}
-                                  </p>
-                                  <p className="mt-1 text-sm text-white">
-                                    {item.description}
-                                  </p>
-                                </div>
-                              </NavLink>
-                            ))}
-                          </div>
-                        </div>
-                      </Popover.Panel>
-                    </Transition>
-                  </>
-                )}
-              </Popover> */}
             </Popover.Group>
             <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
               <button
@@ -362,15 +299,6 @@ const Navbar = () => {
                   >
                     TV Shows
                   </NavLink>
-                  {/* {resources.map((item) => (
-                    <NavLink
-                      key={item.name}
-                      to={item.href}
-                      className="text-base font-medium text-white hover:opacity-80"
-                    >
-                      {item.name}
-                    </NavLink>
-                  ))} */}
                 </div>
                 <div>
                   <button

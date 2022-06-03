@@ -54,7 +54,6 @@ const ListMoviesAndTv = ({ type }) => {
   };
 
   useEffect(() => {
-    document.body.classList.add('overflow-hidden');
     setLoading(true);
     try {
       getTrending();
@@ -64,7 +63,6 @@ const ListMoviesAndTv = ({ type }) => {
         getUpcoming();
       }
     } finally {
-      document.body.classList.remove('overflow-hidden');
       setLoading(false);
     }
   }, [type]);

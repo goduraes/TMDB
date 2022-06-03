@@ -14,6 +14,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Search from './pages/Search';
 import ListMoviesAndTv from './pages/ListMoviesAndTv';
+import MyLists from './pages/MyLists';
 
 import { AuthProvider, AuthContext } from './contexts/auth';
 
@@ -74,6 +75,33 @@ const AppRoutes = () => {
             element={
               <Private>
                 <ListMoviesAndTv type="tv" />
+              </Private>
+            }
+          />
+          <Route
+            exact
+            path="/favorites"
+            element={
+              <Private>
+                <MyLists type="favorite" />
+              </Private>
+            }
+          />
+          <Route
+            exact
+            path="/rated"
+            element={
+              <Private>
+                <MyLists type="rated" />
+              </Private>
+            }
+          />
+          <Route
+            exact
+            path="/watchlist"
+            element={
+              <Private>
+                <MyLists type="watchlist" />
               </Private>
             }
           />

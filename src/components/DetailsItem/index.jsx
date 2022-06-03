@@ -1,12 +1,20 @@
 /* This example requires Tailwind CSS v2.0+ */
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Dialog, Transition } from '@headlessui/react';
+import { Dialog, Transition, Menu } from '@headlessui/react';
 import { XIcon } from '@heroicons/react/outline';
-import { HeartIcon, BookmarkIcon, StarIcon } from '@heroicons/react/solid';
+import {
+  HeartIcon,
+  BookmarkIcon,
+  StarIcon,
+  CheckIcon,
+} from '@heroicons/react/solid';
 import styled from 'styled-components';
+import ReactTooltip from 'react-tooltip';
 import Loading from '../Loading';
 import API from '../../service/api';
+
+import { AuthContext } from '../../contexts/auth';
 
 import './index.css';
 
@@ -38,12 +46,76 @@ const timeConvert = (n) => {
 
 const DetailsItem = ({ open, onClose, item }) => {
   const [itemDetails, setItemDetails] = useState({});
+  const [tooltip, showTooltip] = useState({});
   const [error, setError] = useState(false);
   const [loadingItem, setLoadingItem] = useState(true);
   const [percentageRatio, setPercentageRatio] = useState(0);
+  const [favorite, setFavorite] = useState(false);
+  const [watchlist, setWatchlist] = useState(false);
+  const [openRate, setOpenRate] = useState(false);
+  const [rate, setRate] = useState(5);
+  const [rateOk, setRateOk] = useState(false);
+  const { user } = useContext(AuthContext);
+
+  const Favorite = () => {
+    API.post(
+      `/account/${user.id}/favorite?api_key=${process.env.REACT_APP_API_KEY}&session_id=${user.session_id}`,
+      {
+        media_type: item.media_type,
+        media_id: item.id,
+        favorite: true,
+      },
+    )
+      .then(() => {
+        setFavorite(true);
+      })
+      .finally(() => {
+        setTimeout(() => {
+          setFavorite(false);
+        }, 2000);
+      });
+  };
+
+  const Watchlist = () => {
+    API.post(
+      `/account/${user.id}/watchlist?api_key=${process.env.REACT_APP_API_KEY}&session_id=${user.session_id}`,
+      {
+        media_type: item.media_type,
+        media_id: item.id,
+        watchlist: true,
+      },
+    )
+      .then(() => {
+        setWatchlist(true);
+      })
+      .finally(() => {
+        setTimeout(() => {
+          setWatchlist(false);
+        }, 2000);
+      });
+  };
+
+  const Rate = () => {
+    API.post(
+      `/${item.media_type}/${item.id}/rating?api_key=${process.env.REACT_APP_API_KEY}&session_id=${user.session_id}`,
+      {
+        value: rate,
+      },
+    )
+      .then(() => {
+        setRateOk(true);
+      })
+      .finally(() => {
+        setOpenRate(false);
+        setTimeout(() => {
+          setRateOk(false);
+        }, 2000);
+      });
+  };
 
   useEffect(() => {
     if (open) {
+      setPercentageRatio(0);
       if (item.vote_average) {
         const value =
           item.vote_average !== 10
@@ -124,6 +196,14 @@ const DetailsItem = ({ open, onClose, item }) => {
                         {item.media_type === 'movie' ||
                         item.media_type === 'tv' ? (
                           <>
+                            {tooltip && (
+                              <ReactTooltip
+                                place="top"
+                                type="dark"
+                                effect="solid"
+                              />
+                            )}
+
                             <div className="relative mb-7">
                               <Dialog.Title
                                 className="absolute z-10 py-4 w-full h-full text-center flex flex-col
@@ -255,25 +335,100 @@ const DetailsItem = ({ open, onClose, item }) => {
                                 <div className="flex mt-4 items-center justify-between w-full">
                                   <button
                                     type="button"
-                                    className="bg-slate-900 hover:opacity-80 text-white font-bold mx-2 py-2 px-4 rounded-lg"
+                                    data-tip="Mark as favorite"
+                                    onClick={Favorite}
+                                    onMouseEnter={() => showTooltip(true)}
+                                    onMouseLeave={() => {
+                                      showTooltip(false);
+                                      setTimeout(() => showTooltip(true), 1);
+                                    }}
+                                    className={`bg-slate-900 hover:opacity-80 ${
+                                      favorite ? 'text-red-600' : 'text-white'
+                                    } font-bold mx-2 py-2 px-4 rounded-lg`}
                                   >
                                     <HeartIcon
                                       className="h-4 w-4"
                                       aria-hidden="true"
                                     />
                                   </button>
-                                  <button
-                                    type="button"
-                                    className="bg-slate-900 hover:opacity-80 text-white font-boldmx-2 py-2 px-4 rounded-lg"
+
+                                  <Menu
+                                    as="div"
+                                    className="relative inline-block text-left"
                                   >
-                                    <StarIcon
-                                      className="h-4 w-4"
-                                      aria-hidden="true"
-                                    />
-                                  </button>
+                                    <Menu.Button
+                                      onClick={() => setOpenRate(!openRate)}
+                                      className={`bg-slate-900 hover:opacity-80 ${
+                                        rateOk
+                                          ? 'text-yellow-600'
+                                          : 'text-white'
+                                      } font-bold mx-2 py-2 px-4 rounded-lg`}
+                                    >
+                                      <StarIcon
+                                        className="h-4 w-4"
+                                        aria-hidden="true"
+                                      />
+                                    </Menu.Button>
+
+                                    <Transition
+                                      as={Fragment}
+                                      show={openRate}
+                                      enter="transition ease-out duration-100"
+                                      enterFrom="transform opacity-0 scale-95"
+                                      enterTo="transform opacity-100 scale-100"
+                                      leave="transition ease-in duration-75"
+                                      leaveFrom="transform opacity-100 scale-100"
+                                      leaveTo="transform opacity-0 scale-95"
+                                    >
+                                      <Menu.Items
+                                        className="right-0 origin-top-left mt-1 absolute bg-gray-900
+                                      w-48 rounded-lg shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+                                      >
+                                        <Menu.Item>
+                                          <div className="rounded-lg flex flex-col bg-gray-900 items-center p-3 w-full">
+                                            <div className="text-white  mb-2">
+                                              Rate! {rate}
+                                            </div>
+                                            <input
+                                              className="w-full"
+                                              type="range"
+                                              step="0.10"
+                                              onChange={(e) =>
+                                                setRate(e.target.value)
+                                              }
+                                              value={rate}
+                                              min="0"
+                                              max="10"
+                                            />
+                                            <button
+                                              type="button"
+                                              onClick={Rate}
+                                              className="mt-3 w-12 bg-green-600 hover:opacity-80 text-white font-boldmx-2 py-2 px-4 rounded-lg"
+                                            >
+                                              <CheckIcon
+                                                className="h-5 w-5"
+                                                aria-hidden="true"
+                                              />
+                                            </button>
+                                          </div>
+                                        </Menu.Item>
+                                      </Menu.Items>
+                                    </Transition>
+                                  </Menu>
                                   <button
                                     type="button"
-                                    className="bg-slate-900 hover:opacity-80 text-white font-bold mx-2 py-2 px-4 rounded-lg"
+                                    data-tip="Add to your watchlist"
+                                    onClick={Watchlist}
+                                    onMouseEnter={() => showTooltip(true)}
+                                    onMouseLeave={() => {
+                                      showTooltip(false);
+                                      setTimeout(() => showTooltip(true), 1);
+                                    }}
+                                    className={`bg-slate-900 hover:opacity-80 ${
+                                      watchlist
+                                        ? 'text-amber-500'
+                                        : 'text-white'
+                                    } font-bold mx-2 py-2 px-4 rounded-lg`}
                                   >
                                     <BookmarkIcon
                                       className="h-4 w-4"

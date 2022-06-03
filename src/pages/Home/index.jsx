@@ -21,7 +21,6 @@ const Home = () => {
   };
 
   useEffect(() => {
-    document.body.classList.add('overflow-hidden');
     API.get(`/trending/all/day?api_key=${process.env.REACT_APP_API_KEY}`)
       .then((resp) => {
         setTrendingList(resp.data.results);
@@ -30,7 +29,6 @@ const Home = () => {
         setError(true);
       })
       .finally(() => {
-        document.body.classList.remove('overflow-hidden');
         setLoading(false);
       });
   }, []);

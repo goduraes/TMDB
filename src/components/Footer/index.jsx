@@ -4,7 +4,7 @@ const Footer = () => {
   return (
     <footer
       id="footer"
-      className="text-center lg:text-left bg-tmdb-dark-blue-light text-gray-200"
+      className=" text-center lg:text-left bg-tmdb-dark-blue-light text-gray-200"
     >
       <div className="flex justify-center items-center lg:justify-between p-6">
         <div className="mr-12 hidden lg:block">
