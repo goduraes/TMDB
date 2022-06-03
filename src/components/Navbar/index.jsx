@@ -108,7 +108,7 @@ const Navbar = () => {
               </NavLink>
 
               <NavLink
-                to="/shows"
+                to="/tv"
                 className="text-base font-bold text-white hover:opacity-80"
               >
                 TV Shows
@@ -357,7 +357,7 @@ const Navbar = () => {
                     Movies
                   </NavLink>
                   <NavLink
-                    to="/shows"
+                    to="/tv"
                     className="text-base font-bold text-white text-center hover:opacity-80"
                   >
                     TV Shows

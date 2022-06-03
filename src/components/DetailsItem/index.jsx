@@ -119,7 +119,7 @@ const DetailsItem = ({ open, onClose, item }) => {
                     id="detailsItem"
                     className="flex h-full flex-col overflow-y-scroll bg-tmdb-dark-blue shadow-xl"
                   >
-                    {open && !loadingItem && !error && (
+                    {!loadingItem && !error && (
                       <div>
                         {item.media_type === 'movie' ||
                         item.media_type === 'tv' ? (
@@ -341,8 +341,8 @@ const DetailsItem = ({ open, onClose, item }) => {
                         )}
                       </div>
                     )}
-                    {open && loadingItem && !error && <Loading opacity={0} />}
-                    {open && !loadingItem && error && (
+                    {loadingItem && !error && <Loading opacity={0} />}
+                    {!loadingItem && error && (
                       <div className="mt-2 px-4 sm:px-6">
                         <div
                           className="mt-2 px-4 sm:px-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-5 mb-10"

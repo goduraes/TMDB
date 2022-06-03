@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Scrollbar } from 'swiper';
 import { SearchIcon } from '@heroicons/react/solid';
 import API from '../../service/api';
-import CardItem from '../../components/CardItem';
 import Loading from '../../components/Loading';
-import DetailsItem from '../../components/DetailsItem';
+import SwiperItens from '../../components/SwiperItens';
 
 import 'swiper/css';
 import 'swiper/css/scrollbar';
@@ -18,22 +15,6 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [textSearch, setTextSearch] = useState('');
-  const [openDetails, setOpenDetails] = useState(false);
-  const [itemDetails, setItemDetails] = useState(null);
-
-  const numberSlidesPerView = () => {
-    const { innerWidth: width } = window;
-    if (width <= 640) {
-      return 2;
-    }
-    if (width > 640 && width <= 1024) {
-      return 4;
-    }
-    if (width > 1024 && width <= 1280) {
-      return 6;
-    }
-    return 7;
-  };
 
   const search = () => {
     navigate(`/search?q=${textSearch}`);
@@ -100,36 +81,8 @@ const Home = () => {
         </div>
       </div>
 
-      <h1 className="text-2xl font-bold text-gray-800 py-4">Daily Trends</h1>
-
       {!loading && !error && (
-        <div className="mb-3">
-          <Swiper
-            spaceBetween={30}
-            slidesPerView={numberSlidesPerView()}
-            scrollbar={{ draggable: true }}
-            modules={[Scrollbar]}
-          >
-            {trendingList.map((item) => (
-              <SwiperSlide
-                key={item.id}
-                className="mb-5"
-                onClick={() => {
-                  setItemDetails(item);
-                  setOpenDetails(true);
-                }}
-              >
-                <CardItem item={item} />
-              </SwiperSlide>
-            ))}
-          </Swiper>
-
-          <DetailsItem
-            open={openDetails}
-            onClose={setOpenDetails}
-            item={itemDetails}
-          />
-        </div>
+        <SwiperItens list={trendingList} title="Daily Trends" />
       )}
 
       {!loading && error && (

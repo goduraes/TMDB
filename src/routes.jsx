@@ -13,6 +13,7 @@ import Footer from './components/Footer';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Search from './pages/Search';
+import ListMoviesAndTv from './pages/ListMoviesAndTv';
 
 import { AuthProvider, AuthContext } from './contexts/auth';
 
@@ -55,6 +56,24 @@ const AppRoutes = () => {
             element={
               <Private>
                 <Search />
+              </Private>
+            }
+          />
+          <Route
+            exact
+            path="/movies"
+            element={
+              <Private>
+                <ListMoviesAndTv type="movie" />
+              </Private>
+            }
+          />
+          <Route
+            exact
+            path="/tv"
+            element={
+              <Private>
+                <ListMoviesAndTv type="tv" />
               </Private>
             }
           />
