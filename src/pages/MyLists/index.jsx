@@ -46,6 +46,9 @@ const MyLists = ({ type }) => {
       })
       .catch(() => {
         setError(true);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -109,11 +112,7 @@ const MyLists = ({ type }) => {
         setTitle('');
         break;
     }
-    try {
-      getLists();
-    } finally {
-      setLoading(false);
-    }
+    getLists();
   }, [type, category, currentPage]);
 
   return (
