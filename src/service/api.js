@@ -1,7 +1,11 @@
 import axios from 'axios';
 
-const api = axios.create({
+export const API = axios.create({
   baseURL: 'https://api.themoviedb.org/3/',
 });
 
-export default api;
+export const GetTrending = async (type) => {
+  return API.get(
+    `/trending/${type}/day?api_key=${process.env.REACT_APP_API_KEY}`,
+  );
+};

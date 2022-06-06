@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SearchIcon } from '@heroicons/react/solid';
-import API from '../../service/api';
+import { GetTrending } from '../../service/api';
 import Loading from '../../components/Loading';
 import SwiperItens from '../../components/SwiperItens';
 
@@ -21,7 +21,7 @@ const Home = () => {
   };
 
   useEffect(() => {
-    API.get(`/trending/all/day?api_key=${process.env.REACT_APP_API_KEY}`)
+    GetTrending('all')
       .then((resp) => {
         setTrendingList(resp.data.results);
       })

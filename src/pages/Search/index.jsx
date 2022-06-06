@@ -6,7 +6,7 @@ import { FilterIcon, PlusIcon } from '@heroicons/react/solid';
 import Loading from '../../components/Loading';
 import CardItem from '../../components/CardItem';
 import DetailsItem from '../../components/DetailsItem';
-import API from '../../service/api';
+import { API } from '../../service/api';
 
 const categories = [
   { name: 'Movies', id: 'movie' },

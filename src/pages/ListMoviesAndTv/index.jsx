@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import API from '../../service/api';
+import { API, GetTrending } from '../../service/api';
 import Loading from '../../components/Loading';
 import SwiperItens from '../../components/SwiperItens';
 
@@ -17,7 +17,7 @@ const ListMoviesAndTv = ({ type }) => {
   const [error, setError] = useState(false);
 
   const getTrending = () => {
-    API.get(`/trending/${type}/day?api_key=${process.env.REACT_APP_API_KEY}`)
+    GetTrending(type)
       .then((resp) => {
         setTrendingList(resp.data.results);
       })

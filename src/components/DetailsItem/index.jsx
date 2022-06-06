@@ -12,7 +12,7 @@ import {
 import styled from 'styled-components';
 import ReactTooltip from 'react-tooltip';
 import Loading from '../Loading';
-import API from '../../service/api';
+import { API } from '../../service/api';
 
 import { AuthContext } from '../../contexts/auth';
 

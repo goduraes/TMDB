@@ -6,7 +6,7 @@ import { FilterIcon } from '@heroicons/react/solid';
 import ReactTooltip from 'react-tooltip';
 import CardItem from '../../components/CardItem';
 import DetailsItem from '../../components/DetailsItem';
-import API from '../../service/api';
+import { API } from '../../service/api';
 import Loading from '../../components/Loading';
 
 import { AuthContext } from '../../contexts/auth';
