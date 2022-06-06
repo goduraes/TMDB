@@ -358,6 +358,12 @@ const DetailsItem = ({ open, onClose, item }) => {
                                   >
                                     <Menu.Button
                                       onClick={() => setOpenRate(!openRate)}
+                                      data-tip="Rate It!"
+                                      onMouseEnter={() => showTooltip(true)}
+                                      onMouseLeave={() => {
+                                        showTooltip(false);
+                                        setTimeout(() => showTooltip(true), 1);
+                                      }}
                                       className={`bg-slate-900 hover:opacity-80 ${
                                         rateOk
                                           ? 'text-yellow-600'

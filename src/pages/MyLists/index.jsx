@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useContext, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { Dialog, Transition } from '@headlessui/react';
-import { XIcon } from '@heroicons/react/outline';
+import { XIcon, PlusIcon } from '@heroicons/react/outline';
 import { FilterIcon } from '@heroicons/react/solid';
+import ReactTooltip from 'react-tooltip';
 import CardItem from '../../components/CardItem';
 import DetailsItem from '../../components/DetailsItem';
 import API from '../../service/api';
@@ -23,27 +24,77 @@ const MyLists = ({ type }) => {
   const [title, setTitle] = useState('Favorites');
   const [category, setCategoriy] = useState(categories[0]);
   const [openDetails, setOpenDetails] = useState(false);
+  const [tooltip, showTooltip] = useState({});
   const [itemDetails, setItemDetails] = useState(null);
   const { user } = useContext(AuthContext);
   const [list, setList] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(0);
+  const [depChanges, setDepChanges] = useState(null);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
   const getLists = () => {
     API.get(
-      `/account/${user.id}/${type}/${category.id}?api_key=${process.env.REACT_APP_API_KEY}&session_id=${user.session_id}`,
+      `/account/${user.id}/${type}/${category.id}?api_key=${process.env.REACT_APP_API_KEY}&session_id=${user.session_id}&page=${currentPage}`,
     )
       .then((resp) => {
-        setList(resp.data.results);
+        const arrayConcat = list.concat(resp.data.results);
+        setList(resp.data.page === 1 ? resp.data.results : arrayConcat);
+        setTotalPage(resp.data.total_pages);
       })
       .catch(() => {
         setError(true);
       });
   };
 
+  const Favorite = (itemAction) => {
+    API.post(
+      `/account/${user.id}/favorite?api_key=${process.env.REACT_APP_API_KEY}&session_id=${user.session_id}`,
+      {
+        media_type: itemAction.media_type,
+        media_id: itemAction.id,
+        favorite: false,
+      },
+    ).finally(() => {
+      getLists();
+    });
+  };
+
+  const Rate = (itemAction) => {
+    API.delete(
+      `/${itemAction.media_type}/${itemAction.id}/rating?api_key=${process.env.REACT_APP_API_KEY}&session_id=${user.session_id}`,
+    ).finally(() => {
+      getLists();
+    });
+  };
+
+  const Watchlist = (itemAction) => {
+    API.post(
+      `/account/${user.id}/watchlist?api_key=${process.env.REACT_APP_API_KEY}&session_id=${user.session_id}`,
+      {
+        media_type: itemAction.media_type,
+        media_id: itemAction.id,
+        watchlist: false,
+      },
+    ).finally(() => {
+      getLists();
+    });
+  };
+
   useEffect(() => {
     setLoading(true);
+    if (depChanges) {
+      if (depChanges.type !== type || depChanges.category !== category) {
+        setCurrentPage(1);
+      }
+    }
+    setDepChanges({
+      type,
+      category,
+      currentPage,
+    });
     switch (type) {
       case 'favorite':
         setTitle('Favorites');
@@ -63,7 +114,7 @@ const MyLists = ({ type }) => {
     } finally {
       setLoading(false);
     }
-  }, [type, category]);
+  }, [type, category, currentPage]);
 
   return (
     <div className="main-content">
@@ -125,7 +176,7 @@ const MyLists = ({ type }) => {
                             type="button"
                             onClick={() => {
                               setCategoriy(categoryItem);
-                              // setCurrentPage(1);
+                              setCurrentPage(1);
                             }}
                             className="block text-left px-2 py-3 w-full"
                           >
@@ -173,7 +224,7 @@ const MyLists = ({ type }) => {
                         type="button"
                         onClick={() => {
                           setCategoriy(categoryItem);
-                          // setCurrentPage(1);
+                          setCurrentPage(1);
                         }}
                         className="block text-left px-2 py-3 w-full"
                       >
@@ -189,21 +240,55 @@ const MyLists = ({ type }) => {
 
                 {!loading && !error && (
                   <div className="flex flex-wrap justify-center gap-4">
+                    {tooltip && (
+                      <ReactTooltip place="top" type="dark" effect="solid" />
+                    )}
                     {list.map((item) => (
-                      <div
-                        key={item.id}
-                        role="presentation"
-                        onClick={() => {
-                          setItemDetails({
-                            ...item,
-                            media_type: category.mediaType,
-                          });
-                          setOpenDetails(true);
-                        }}
-                      >
-                        <CardItem
-                          item={{ ...item, media_type: category.mediaType }}
-                        />
+                      <div key={item.id}>
+                        <button
+                          type="button"
+                          onMouseEnter={() => showTooltip(true)}
+                          onMouseLeave={() => {
+                            showTooltip(false);
+                            setTimeout(() => showTooltip(true), 1);
+                          }}
+                          className="flex w-full justify-end hover:opacity-80"
+                        >
+                          <XIcon
+                            onClick={() => {
+                              const itemAction = {
+                                ...item,
+                                media_type: category.mediaType,
+                              };
+                              if (type === 'favorite') {
+                                Favorite(itemAction);
+                              }
+                              if (type === 'watchlist') {
+                                Watchlist(itemAction);
+                              }
+                              if (type === 'rated') {
+                                Rate(itemAction);
+                              }
+                            }}
+                            className="h-6 w-6"
+                            data-tip="Remover da lista"
+                            aria-hidden="true"
+                          />
+                        </button>
+                        <div
+                          role="presentation"
+                          onClick={() => {
+                            setItemDetails({
+                              ...item,
+                              media_type: category.mediaType,
+                            });
+                            setOpenDetails(true);
+                          }}
+                        >
+                          <CardItem
+                            item={{ ...item, media_type: category.mediaType }}
+                          />
+                        </div>
                       </div>
                     ))}
 
@@ -213,7 +298,7 @@ const MyLists = ({ type }) => {
                       item={itemDetails}
                     />
 
-                    {/* {totalPage > currentPage && (
+                    {totalPage > currentPage && (
                       <div className="w-full flex justify-center">
                         <button
                           onClick={() => setCurrentPage(currentPage + 1)}
@@ -223,7 +308,7 @@ const MyLists = ({ type }) => {
                           <PlusIcon className="w-5 h-5" aria-hidden="true" />
                         </button>
                       </div>
-                    )} */}
+                    )}
                     {list.length === 0 && (
                       <div
                         className="w-full bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mt-5 mb-10"

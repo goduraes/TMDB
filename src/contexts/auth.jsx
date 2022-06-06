@@ -11,6 +11,12 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
 
+  const logout = () => {
+    localStorage.removeItem('user');
+    setUser(null);
+    navigate('/login');
+  };
+
   // cria o token
   const createRequestToken = async () => {
     const requestToken = await API.get(
@@ -56,8 +62,10 @@ export const AuthProvider = ({ children }) => {
         if (login) navigate('/');
       })
       .catch(() => {
-        setErrorMessage('Oops! Something went wrong, try again.');
-        navigate('/login');
+        if (login) {
+          setErrorMessage('Oops! Something went wrong, try again.');
+        }
+        logout();
       })
       .finally(() => {
         setLoading(false);
@@ -98,12 +106,6 @@ export const AuthProvider = ({ children }) => {
       });
   };
 
-  const logout = () => {
-    localStorage.removeItem('user');
-    setUser(null);
-    navigate('/login');
-  };
-
   useEffect(() => {
     const recoveredUser = localStorage.getItem('user');
     setUser(recoveredUser);
@@ -112,8 +114,10 @@ export const AuthProvider = ({ children }) => {
       if (userParse.session_id) {
         getUser(userParse.session_id);
       } else {
-        navigate('/login');
+        logout();
       }
+    } else {
+      setLoading(false);
     }
   }, []);
 

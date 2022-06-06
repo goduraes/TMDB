@@ -187,7 +187,7 @@ const Navbar = () => {
                 <div>
                   <Menu.Button
                     className="icon-user border-2 border-transparent inline-flex justify-center items-center px-4 py-2 text-sm font-medium text-white
-                  flex rounded-lg hover:bg-slate-900	"
+                  flex rounded-lg hover:bg-slate-900"
                   >
                     <UserIcon className="h-4 w-4 mr-1" aria-hidden="true" />
                     <span>{user.username}</span>
@@ -203,7 +203,7 @@ const Navbar = () => {
                   leaveFrom="transform opacity-100 scale-100"
                   leaveTo="transform opacity-0 scale-95"
                 >
-                  <Menu.Items className="border-2 border-slate-900 origin-top-right mt-1 absolute right-0 w-full rounded-md shadow-lg bg-tmdb-dark-blue ring-1 ring-black ring-opacity-5 focus:outline-none">
+                  <Menu.Items className="z-10 border-2 border-slate-900 origin-top-right mt-1 absolute right-0 w-full rounded-md shadow-lg bg-tmdb-dark-blue ring-1 ring-black ring-opacity-5 focus:outline-none">
                     <div>
                       <form>
                         <Menu.Item>
