@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext } from 'react';
+import React, { useState, useEffect, createContext, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { API } from '../service/api';
 
@@ -121,20 +121,22 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
+  const contextData = useMemo(
+    () => ({
+      authenticated: !!user,
+      loading,
+      setLoading,
+      loadingLogin,
+      errorMessage,
+      user,
+      login,
+      logout,
+    }),
+    [user, loadingLogin, loading, errorMessage],
+  );
+
   return (
-    <AuthContext.Provider
-      // eslint-disable-next-line react/jsx-no-constructed-context-values
-      value={{
-        authenticated: !!user,
-        loading,
-        setLoading,
-        loadingLogin,
-        errorMessage,
-        user,
-        login,
-        logout,
-      }}
-    >
+    <AuthContext.Provider value={contextData}>
       {!loading && children}
     </AuthContext.Provider>
   );
